@@ -38,8 +38,8 @@ public class UserServiceTest
         OffsetDateTime dataCriacaoFixa = OffsetDateTime.parse("2026-05-06T15:59:00-03:00");
         //Arrange
         UserRequestDto request = new UserRequestDto("Ana", "ana@email.com", "1234", dataNascimentoFixa);
-        UsuarioEntity entity = new UsuarioEntity(null, "Ana", "ana@email.com", "1234", dataNascimentoFixa, null);
-        UsuarioEntity entidadeSalva = new UsuarioEntity(1L, "Ana", "ana@email.com","1234", dataNascimentoFixa,dataCriacaoFixa );
+        UsuarioEntity entity = new UsuarioEntity(null, "Ana", "ana@email.com", "1234", dataNascimentoFixa, null, null);
+        UsuarioEntity entidadeSalva = new UsuarioEntity(1L, "Ana", "ana@email.com","1234", dataNascimentoFixa,dataCriacaoFixa, null );
         UserResponseDto responseEsperada = new UserResponseDto(1L, "Ana", "ana@email.com");
 
         Mockito.when(mapper.toEntity(request)).thenReturn(entity);
