@@ -1,4 +1,4 @@
-package com.apportion.apportion.Social.Model.Controller;
+package com.apportion.apportion.Social.Controller;
 
 
 import com.apportion.apportion.Social.Model.Entidades.Dto.Requests.GrupoRequestDto;
