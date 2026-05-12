@@ -1,4 +1,14 @@
 package com.apportion.apportion.Social.Model.Entidades.Dto.Responses;
 
-public class GrupoResponseDto {
+import lombok.*;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class ViagemResponseDto {
+    private Long id;
+    private String nome;
+    private Long grupoId;
 }
