@@ -4,7 +4,7 @@ import com.apportion.apportion.Identity.Model.Entidades.Dto.Mapper.IUsuarioMappe
 import com.apportion.apportion.Identity.Model.Entidades.Dto.Requests.UserRequestDto;
 import com.apportion.apportion.Identity.Model.Entidades.Dto.Responses.UserResponseDto;
 import com.apportion.apportion.Identity.Model.Entidades.UsuarioEntity;
-import com.apportion.apportion.Identity.Repositrories.UserRepository;
+import com.apportion.apportion.Identity.Repositories.UserRepository;
 import com.apportion.apportion.Identity.Service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

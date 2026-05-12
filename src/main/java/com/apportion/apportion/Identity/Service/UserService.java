@@ -4,12 +4,11 @@ import com.apportion.apportion.Identity.Model.Entidades.Dto.Mapper.IUsuarioMappe
 import com.apportion.apportion.Identity.Model.Entidades.Dto.Requests.UserRequestDto;
 import com.apportion.apportion.Identity.Model.Entidades.Dto.Responses.UserResponseDto;
 import com.apportion.apportion.Identity.Model.Entidades.UsuarioEntity;
-import com.apportion.apportion.Identity.Repositrories.UserRepository;
+import com.apportion.apportion.Identity.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
