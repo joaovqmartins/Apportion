@@ -1,1 +1,17 @@
-services: {}
+services:
+  postgres-db:
+    image: postgres:15-alpine
+    container_name: apportion-db
+    environment:
+      POSTGRES_USER: apportion_user
+      POSTGRES_PASSWORD: apportion_password
+      POSTGRES_DB: apportiondb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
