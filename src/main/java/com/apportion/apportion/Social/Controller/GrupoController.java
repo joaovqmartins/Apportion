@@ -57,5 +57,29 @@ public class GrupoController {
         grupoService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{grupoId}/usuarios/{usuarioId}")
+    public ResponseEntity<GrupoResponseDto> adicionarUsuarioAoGrupo(
+            @PathVariable Long grupoId,
+            @PathVariable Long usuarioId) {
+        try {
+            GrupoResponseDto grupoAtualizado = grupoService.adicionarUsuario(grupoId, usuarioId);
+            return ResponseEntity.ok(grupoAtualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/{grupoId}/usuarios/{usuarioId}")
+    public ResponseEntity<GrupoResponseDto> removerUsuarioDoGrupo(
+            @PathVariable Long grupoId,
+            @PathVariable Long usuarioId) {
+        try {
+            GrupoResponseDto grupoAtualizado = grupoService.removerUsuario(grupoId, usuarioId);
+            return ResponseEntity.ok(grupoAtualizado);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }
 
