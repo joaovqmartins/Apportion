@@ -1,5 +1,7 @@
 package com.apportion.apportion.SocialTestes;
 
+import com.apportion.apportion.Identity.Model.Entidades.UsuarioEntity;
+import com.apportion.apportion.Identity.Repositories.UserRepository;
 import com.apportion.apportion.Social.Model.Entidades.Dto.Mapper.IGrupoMapper;
 import com.apportion.apportion.Social.Model.Entidades.Dto.Requests.GrupoRequestDto;
 import com.apportion.apportion.Social.Model.Entidades.Dto.Responses.GrupoResponseDto;
@@ -31,17 +33,22 @@ public class GrupoServiceTest {
     private GrupoRepository repository;
 
     @Mock
+    private UserRepository userRepository; // [NOVO] Mock do repositório de usuários
+
+    @Mock
     private IGrupoMapper mapper;
 
     @InjectMocks
     private GrupoService service;
+
+    // --- TESTES ANTIGOS DE CRUD MANTIDOS ---
 
     @Test
     void deveSalvarGrupoComSucesso() {
         GrupoRequestDto request = new GrupoRequestDto("Viagem de Fim de Ano");
         GrupoEntity entity = new GrupoEntity(null, "Viagem de Fim de Ano", new HashSet<>(), new HashSet<>());
         GrupoEntity entidadeSalva = new GrupoEntity(1L, "Viagem de Fim de Ano", new HashSet<>(), new HashSet<>());
-        GrupoResponseDto responseEsperada = new GrupoResponseDto(1L, "Viagem de Fim de Ano");
+        GrupoResponseDto responseEsperada = new GrupoResponseDto(1L, "Viagem de Fim de Ano", new HashSet<>());
 
         Mockito.when(mapper.toEntity(request)).thenReturn(entity);
         Mockito.when(repository.save(entity)).thenReturn(entidadeSalva);
@@ -58,7 +65,7 @@ public class GrupoServiceTest {
     @Test
     void deveBuscarGrupoPorIdComSucesso() {
         GrupoEntity entity = new GrupoEntity(1L, "Amigos", new HashSet<>(), new HashSet<>());
-        GrupoResponseDto responseEsperada = new GrupoResponseDto(1L, "Amigos");
+        GrupoResponseDto responseEsperada = new GrupoResponseDto(1L, "Amigos", new HashSet<>());
 
         Mockito.when(repository.findById(1L)).thenReturn(Optional.of(entity));
         Mockito.when(mapper.toResponseDTO(entity)).thenReturn(responseEsperada);
@@ -85,7 +92,7 @@ public class GrupoServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         GrupoEntity entity = new GrupoEntity(1L, "Amigos", new HashSet<>(), new HashSet<>());
         Page<GrupoEntity> pagina = new PageImpl<>(List.of(entity));
-        GrupoResponseDto responseDto = new GrupoResponseDto(1L, "Amigos");
+        GrupoResponseDto responseDto = new GrupoResponseDto(1L, "Amigos", new HashSet<>());
 
         Mockito.when(repository.findAll(pageable)).thenReturn(pagina);
         Mockito.when(mapper.toResponseDTO(any(GrupoEntity.class))).thenReturn(responseDto);
@@ -108,5 +115,80 @@ public class GrupoServiceTest {
         Mockito.when(repository.existsById(1L)).thenReturn(true);
         boolean existe = service.existsById(1L);
         assertTrue(existe);
+    }
+
+    // --- [NOVOS TESTES] MANIPULAÇÃO DE USUÁRIOS NO GRUPO ---
+
+    @Test
+    void deveAdicionarUsuarioAoGrupoComSucesso() {
+        // Arrange
+        GrupoEntity grupo = new GrupoEntity(1L, "Viagem SP", new HashSet<>(), new HashSet<>());
+        UsuarioEntity usuario = new UsuarioEntity(1L, "João", "joao@email.com", "senha", null, null, new HashSet<>());
+        GrupoResponseDto responseEsperada = new GrupoResponseDto(1L, "Viagem SP", new HashSet<>());
+
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(grupo));
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(usuario));
+        Mockito.when(mapper.toResponseDTO(grupo)).thenReturn(responseEsperada);
+
+        // Act
+        service.adicionarUsuario(1L, 1L);
+
+        // Assert
+        assertTrue(grupo.getUsuarios().contains(usuario)); // Garante que o usuário foi pra lista do grupo
+        assertTrue(usuario.getGrupo().contains(grupo)); // Garante que o grupo foi pra lista do usuário
+
+        // Regra vitalícia: garante que o método save do USUÁRIO foi chamado 1 vez (ele é o dono da relação)
+        Mockito.verify(userRepository, Mockito.times(1)).save(usuario);
+    }
+
+    @Test
+    void deveLancarExcecaoAoTentarAdicionarUsuarioEmGrupoInexistente() {
+        Mockito.when(repository.findById(99L)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            service.adicionarUsuario(99L, 1L);
+        });
+
+        assertEquals("Grupo não encontrado", exception.getMessage());
+        Mockito.verify(userRepository, Mockito.never()).save(any());
+    }
+
+    @Test
+    void deveLancarExcecaoAoTentarAdicionarUsuarioInexistenteAoGrupo() {
+        GrupoEntity grupo = new GrupoEntity(1L, "Viagem SP", new HashSet<>(), new HashSet<>());
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(grupo));
+        Mockito.when(userRepository.findById(99L)).thenReturn(Optional.empty());
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            service.adicionarUsuario(1L, 99L);
+        });
+
+        assertEquals("Usuário não encontrado", exception.getMessage());
+        Mockito.verify(userRepository, Mockito.never()).save(any());
+    }
+
+    @Test
+    void deveRemoverUsuarioDoGrupoComSucesso() {
+        // Arrange: Preparamos o cenário onde eles já estão vinculados
+        GrupoEntity grupo = new GrupoEntity(1L, "Viagem SP", new HashSet<>(), new HashSet<>());
+        UsuarioEntity usuario = new UsuarioEntity(1L, "João", "joao@email.com", "senha", null, null, new HashSet<>());
+
+        grupo.getUsuarios().add(usuario);
+        usuario.getGrupo().add(grupo);
+
+        GrupoResponseDto responseEsperada = new GrupoResponseDto(1L, "Viagem SP", new HashSet<>());
+
+        Mockito.when(repository.findById(1L)).thenReturn(Optional.of(grupo));
+        Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(usuario));
+        Mockito.when(mapper.toResponseDTO(grupo)).thenReturn(responseEsperada);
+
+        // Act
+        service.removerUsuario(1L, 1L);
+
+        // Assert
+        assertFalse(grupo.getUsuarios().contains(usuario)); // Garante que saiu da lista do grupo
+        assertFalse(usuario.getGrupo().contains(grupo)); // Garante que saiu da lista do usuário
+
+        Mockito.verify(userRepository, Mockito.times(1)).save(usuario);
     }
 }
