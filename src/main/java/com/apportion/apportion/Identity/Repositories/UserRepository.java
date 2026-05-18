@@ -1,4 +1,4 @@
-package com.apportion.apportion.Identity.Repositrories;
+package com.apportion.apportion.Identity.Repositories;
 
 
 import com.apportion.apportion.Identity.Model.Entidades.UsuarioEntity;
