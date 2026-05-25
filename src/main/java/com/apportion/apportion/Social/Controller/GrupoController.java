@@ -39,7 +39,7 @@ public class GrupoController {
         }
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<GrupoResponseDto> create(@RequestBody GrupoRequestDto request) {
         GrupoResponseDto novoGrupo = grupoService.save(request);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
