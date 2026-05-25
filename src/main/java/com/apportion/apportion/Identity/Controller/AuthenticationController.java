@@ -1,7 +1,9 @@
 package com.apportion.apportion.Identity.Controller;
+import com.apportion.apportion.Identity.Infra.security.TokenService;
 import com.apportion.apportion.Identity.Model.Entidades.Dto.AuthenticationDto;
 import com.apportion.apportion.Identity.Model.Entidades.Dto.Requests.UserRegisterDto;
 import com.apportion.apportion.Identity.Model.Entidades.Dto.Requests.UserRequestDto;
+import com.apportion.apportion.Identity.Model.Entidades.Dto.Responses.LoginResponseDTO;
 import com.apportion.apportion.Identity.Model.Entidades.UsuarioEntity;
 import com.apportion.apportion.Identity.Repositories.UserRepository;
 import jakarta.validation.Valid;
@@ -26,13 +28,18 @@ public class AuthenticationController {
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private TokenService tokenService;
+
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid AuthenticationDto data)
     {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(),data.senha());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok().build();
+        var token = tokenService.generateToken((UsuarioEntity) auth.getPrincipal());
+
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     };
 
     @PostMapping("/register")

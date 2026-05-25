@@ -12,3 +12,7 @@ spring:
     console:
       enabled: true
       path: /h2-console
+api:
+  security:
+    token:
+      secret: ${JWT_SECRET:minha-chave-longa-e-segura-123412341234}
