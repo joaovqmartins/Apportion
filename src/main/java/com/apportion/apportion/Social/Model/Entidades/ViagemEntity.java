@@ -1,7 +1,8 @@
 package com.apportion.apportion.Social.Model.Entidades;
 
 
-import com.apportion.apportion.Expenses.Model.DispesasEntity;
+import com.apportion.apportion.Expenses.Model.ContratoDeDivida;
+import com.apportion.apportion.Expenses.Model.DespesasEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +29,10 @@ public class ViagemEntity
     private GrupoEntity grupo;
 
     @OneToMany(mappedBy = "viagem", cascade = CascadeType.ALL)
-    private Set<DispesasEntity> dispesas = new HashSet<>();
+    private Set<DespesasEntity> despesas = new HashSet<>();
+
+    @OneToMany(mappedBy = "viagem_id", cascade = CascadeType.ALL)
+    private Set<ContratoDeDivida> contratosDeDividas;
+
 
 }

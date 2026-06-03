@@ -1,6 +1,7 @@
 package com.apportion.apportion.Identity.Model.Entidades;
 
-import com.apportion.apportion.Expenses.Model.DispesasEntity;
+import com.apportion.apportion.Expenses.Model.ContratoDeDivida;
+import com.apportion.apportion.Expenses.Model.DespesasEntity;
 import com.apportion.apportion.Identity.Model.Enums.Roles;
 import com.apportion.apportion.Social.Model.Entidades.GrupoEntity;
 import jakarta.persistence.*;
@@ -55,10 +56,16 @@ public class UsuarioEntity implements UserDetails {
     private Set<GrupoEntity> grupo = new HashSet<>();
 
     @OneToMany(mappedBy = "recebedor", cascade = CascadeType.ALL)
-    private Set<DispesasEntity> dispesasParaReceber = new HashSet<>();
+    private Set<DespesasEntity> despesasParaReceber = new HashSet<>();
 
     @ManyToMany(mappedBy = "pagantes")
-    private Set<DispesasEntity> dispesasParaPagar = new HashSet<>();
+    private Set<DespesasEntity> despesasParaPagar = new HashSet<>();
+
+    @OneToMany(mappedBy = "credor_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ContratoDeDivida> creditosAtivos = new HashSet<>();
+
+    @OneToMany(mappedBy = "devedor_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ContratoDeDivida> debitosAtivos = new HashSet<>();
 
     public UsuarioEntity(String nome, String email, String senha, LocalDate dataDeNascimento, Roles role){
         this.nome = nome;
@@ -70,7 +77,7 @@ public class UsuarioEntity implements UserDetails {
     }
 
     @PrePersist
-    public void OnCrate(){this.dataCriacao = OffsetDateTime.now();}
+    public void onCrate(){this.dataCriacao = OffsetDateTime.now();}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

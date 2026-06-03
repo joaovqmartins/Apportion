@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,13 +18,13 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DispesasEntity {
+public class DespesasEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "valor", nullable = false)
-    private Double valor;
+    private BigDecimal valor;
 
     @Column(name = "descricao", length = 213)
     private String descricao;
@@ -33,8 +34,8 @@ public class DispesasEntity {
     private UsuarioEntity recebedor;
 
     @ManyToMany
-    @JoinTable(name = "pagantes_dispesas",
-            joinColumns = @JoinColumn(name = "dispesa_id"),
+    @JoinTable(name = "pagantes_despesas",
+            joinColumns = @JoinColumn(name = "despesa_id"),
             inverseJoinColumns = @JoinColumn(name = "pagante_id"))
     private Set<UsuarioEntity> pagantes = new HashSet<>();
 
