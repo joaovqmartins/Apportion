@@ -1,5 +1,6 @@
 package com.apportion.apportion.Identity.Model.Entidades;
 
+import com.apportion.apportion.Expenses.Model.DispesasEntity;
 import com.apportion.apportion.Identity.Model.Enums.Roles;
 import com.apportion.apportion.Social.Model.Entidades.GrupoEntity;
 import jakarta.persistence.*;
@@ -52,6 +53,12 @@ public class UsuarioEntity implements UserDetails {
             joinColumns = @JoinColumn(name = "usuario_id"),
             inverseJoinColumns = @JoinColumn(name = "grupo_id"))
     private Set<GrupoEntity> grupo = new HashSet<>();
+
+    @OneToMany(mappedBy = "recebedor", cascade = CascadeType.ALL)
+    private Set<DispesasEntity> dispesasParaReceber = new HashSet<>();
+
+    @ManyToMany(mappedBy = "pagantes")
+    private Set<DispesasEntity> dispesasParaPagar = new HashSet<>();
 
     public UsuarioEntity(String nome, String email, String senha, LocalDate dataDeNascimento, Roles role){
         this.nome = nome;
