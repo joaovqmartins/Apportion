@@ -7,6 +7,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface IGrupoMapper {
+
     GrupoEntity toEntity(GrupoRequestDto requestDto);
     GrupoResponseDto toResponseDTO(GrupoEntity entity);
 }

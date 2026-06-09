@@ -45,15 +45,6 @@ public class UsuarioController {
         }
 
     }
-    @PostMapping
-    public ResponseEntity<UserResponseDto> create(@RequestBody UserRequestDto user) {
-        UserResponseDto novoUsuario = userService.save(user);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(novoUsuario.getId())
-                .toUri();
-        return ResponseEntity.created(uri).body(novoUsuario);
-    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable long id) {
         if (!userService.existsById(id)) {
