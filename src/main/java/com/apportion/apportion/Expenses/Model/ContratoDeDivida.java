@@ -38,4 +38,7 @@ public class ContratoDeDivida {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal valor;
 
+    @Column(nullable = false)
+    private boolean ativa;
+
 }
