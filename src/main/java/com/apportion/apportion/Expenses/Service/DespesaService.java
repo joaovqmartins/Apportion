@@ -55,15 +55,10 @@ public class DespesaService {
             }
         }
     }
-
-    // ------------------------------------------------------------------
-    // Novos métodos de consulta
-    // ------------------------------------------------------------------
-
     /**
      * Busca todas as despesas de uma viagem, paginadas.
      *
-     * @throws ResourceNotFoundException se a viagem não existir
+      @throws ResourceNotFoundException se a viagem não existir
      */
     @Transactional(readOnly = true)
     public Page<DespesaResponseDTO> findByViagem(Long viagemId, Pageable pageable) {
