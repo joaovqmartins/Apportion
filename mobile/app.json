@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "Apportion",
+    "slug": "apportion",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#121214",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.apportion.mobile"
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}
